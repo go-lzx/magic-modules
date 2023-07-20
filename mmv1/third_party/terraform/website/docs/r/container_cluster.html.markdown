@@ -360,6 +360,9 @@ subnetwork in which the cluster's instances are launched.
 * `protect_config` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html))
   Enable/Disable Protect API features for the cluster. Structure is [documented below](#nested_protect_config).
 
+* `security_posture_config` - (Optional)
+Enable/Disable Security Posture API features for the cluster. Structure is [documented below](#nested_security_posture_config).
+
 <a name="nested_default_snat_status"></a>The `default_snat_status` block supports
 
 *  `disabled` - (Required) Whether the cluster disables default in-node sNAT rules. In-node sNAT rules will be disabled when defaultSnatStatus is disabled.When disabled is set to false, default IP masquerade rules will be applied to the nodes to prevent sNAT on cluster internal traffic
@@ -893,6 +896,7 @@ linux_node_config {
 
 * `sole_tenant_config` (Optional)  Allows specifying multiple [node affinities](https://cloud.google.com/compute/docs/nodes/sole-tenant-nodes#node_affinity_and_anti-affinity) useful for running workloads on [sole tenant nodes](https://cloud.google.com/kubernetes-engine/docs/how-to/sole-tenancy). `node_affinity` structure is [documented below](#nested_node_affinity).
 
+```hcl
 sole_tenant_config {
   node_affinity {
     key = "compute.googleapis.com/node-group-name"
@@ -943,6 +947,17 @@ sole_tenant_config {
 * `type` (Required) - The accelerator type resource to expose to this instance. E.g. `nvidia-tesla-k80`.
 
 * `count` (Required) - The number of the guest accelerator cards exposed to this instance.
+
+* `gpu_driver_installation_config` (Optional) - Configuration for auto installation of GPU driver. Structure is [documented below](#nested_gpu_driver_installation_config).
+
+<a name="nested_gpu_driver_installation_config"></a>The `gpu_driver_installation_config` block supports:
+
+* `gpu_driver_version` (Required) - Mode for how the GPU driver is installed.
+    Accepted values are:
+    * `"GPU_DRIVER_VERSION_UNSPECIFIED"`: Default value is to not install any GPU driver.
+    * `"INSTALLATION_DISABLED"`: Disable GPU driver auto installation and needs manual installation.
+    * `"DEFAULT"`: "Default" GPU driver in COS and Ubuntu.
+    * `"LATEST"`: "Latest" GPU driver in COS.
 
 * `gpu_partition_size` (Optional) - Size of partitions to create on the GPU. Valid values are described in the NVIDIA mig [user guide](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/#partitioning).
 
@@ -1205,6 +1220,14 @@ and all pods running on the nodes. Specified as a map from the key, such as
 <a name="nested_workload_config"></a>The `protect_config.workload_config` block supports:
 
 * `audit_mode` - (Optional, [Beta](https://terraform.io/docs/providers/google/guides/provider_versions.html)) Sets which mode of auditing should be used for the cluster's workloads. Accepted values are DISABLED, BASIC.
+
+<a name="nested_security_posture_config"></a>The `security_posture_config` block supports:
+
+* `mode` - (Optional) Sets the mode of the Kubernetes security posture API's off-cluster features. Available options include `DISABLED` and `BASIC`.
+
+
+* `vulnerability_mode` - (Optional) Sets the mode of the Kubernetes security posture API's workload vulnerability scanning. Available options include `VULNERABILITY_DISABLED` and `VULNERABILITY_BASIC`.
+
 
 ## Attributes Reference
 
